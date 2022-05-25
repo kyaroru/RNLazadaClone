@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ScrollView, TouchableOpacity} from 'react-native';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {Colors} from 'themes';
 import {Label} from 'components';
 import {normalize} from 'utils/size';
 
 const CategoryPanel = props => {
-  const {categories, selected, onCategorySelected} = props;
+  const {categories, selected, onCategorySelected, isLoading} = props;
   return (
     <ScrollView
       horizontal
@@ -15,26 +15,38 @@ const CategoryPanel = props => {
         paddingHorizontal: normalize(16),
         paddingVertical: normalize(10),
       }}>
-      {categories.map((c, index) => (
-        <TouchableOpacity
-          onPress={() => onCategorySelected(index)}
-          key={c}
-          style={{
-            backgroundColor:
-              selected === index ? Colors.selectedTag : Colors.transparent,
-            borderRadius: normalize(15),
-            paddingHorizontal: normalize(8),
-            paddingBottom: normalize(3),
-          }}>
+      {isLoading && categories.length === 0 ? (
+        <View>
           <Label
-            text={c}
+            text="Loading categories..."
             size="ml"
             variant="bold"
             color="white"
             align="center"
           />
-        </TouchableOpacity>
-      ))}
+        </View>
+      ) : (
+        categories.map((c, index) => (
+          <TouchableOpacity
+            onPress={() => onCategorySelected(index)}
+            key={c}
+            style={{
+              backgroundColor:
+                selected === index ? Colors.selectedTag : Colors.transparent,
+              borderRadius: normalize(15),
+              paddingHorizontal: normalize(8),
+              paddingBottom: normalize(3),
+            }}>
+            <Label
+              text={c}
+              size="ml"
+              variant="bold"
+              color="white"
+              align="center"
+            />
+          </TouchableOpacity>
+        ))
+      )}
     </ScrollView>
   );
 };

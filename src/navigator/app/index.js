@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Cart, Dashboard, Splash} from 'screens';
+import {Home, Cart, Dashboard, Splash, Products} from 'screens';
 import NavigationService from './navigation-service';
 import {connect} from 'react-redux';
 import Selectors from 'selectors';
@@ -12,12 +12,6 @@ const RootStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 class AppNavigator extends Component {
-  modals = () => (
-    <RootStack.Group screenOptions={{presentation: 'transparentModal'}}>
-      <RootStack.Screen name="Test" component={Home} />
-    </RootStack.Group>
-  );
-
   tabs = () => (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -55,7 +49,7 @@ class AppNavigator extends Component {
           {this.props.isStoreRehydrated ? (
             <>
               <RootStack.Screen name="Tabs" component={this.tabs} />
-              <RootStack.Screen name="Modals" component={this.modals} />
+              <RootStack.Screen name="Products" component={Products} />
             </>
           ) : (
             <>

@@ -3,6 +3,7 @@ import {
   View,
   StyleSheet,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
@@ -27,12 +28,16 @@ class TextInput extends Component {
       iconComponent,
       onChangeText,
       itemRight,
+      onPress,
       ...otherProps
     } = this.props;
     const Icon = iconComponent || MaterialIcons;
-
+    const ConditionalView = onPress ? TouchableOpacity : View;
     return (
-      <View style={[styles.container, containerStyle]}>
+      <ConditionalView
+        activeOpacity={0.6}
+        onPress={onPress}
+        style={[styles.container, containerStyle]}>
         <View style={[styles.inputContainer, inputContainerStyle]}>
           {iconLeft && (
             <View style={styles.iconLeft}>
@@ -43,13 +48,24 @@ class TextInput extends Component {
               />
             </View>
           )}
-          <RNTextInput
-            onChangeText={onChangeText}
-            value={value}
-            style={[styles.input, {color: Colors.primaryText}, inputStyle]}
-            placeholderTextColor={Colors.inputPlaceholder}
-            {...otherProps}
-          />
+          {onPress ? (
+            <View
+              style={[
+                styles.input,
+                {color: Colors.primaryText, justifyContent: 'center'},
+                inputStyle,
+              ]}>
+              <Label text={otherProps.placeholder} color="inputPlaceholder" />
+            </View>
+          ) : (
+            <RNTextInput
+              onChangeText={onChangeText}
+              value={value}
+              style={[styles.input, {color: Colors.primaryText}, inputStyle]}
+              placeholderTextColor={Colors.inputPlaceholder}
+              {...otherProps}
+            />
+          )}
           {itemRight && itemRight}
         </View>
 
@@ -62,7 +78,7 @@ class TextInput extends Component {
             text={error}
           />
         )}
-      </View>
+      </ConditionalView>
     );
   }
 }

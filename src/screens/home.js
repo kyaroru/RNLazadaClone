@@ -223,6 +223,7 @@ class Home extends Component {
 
   componentDidMount() {
     this.props.fetchCategories();
+    this.props.fetchProducts();
   }
 
   onLayout = e => {
@@ -232,8 +233,14 @@ class Home extends Component {
   };
 
   render() {
-    const {categories} = this.props;
-    const {selectedCategory, icons, products} = this.state;
+    const {
+      categories,
+      fetchProducts,
+      products,
+      isLoadingCategories,
+      navigation,
+    } = this.props;
+    const {selectedCategory, icons} = this.state;
     const dummyText = 'Due to time constraint, this is not implemented';
     return (
       <SafeAreaView style={styles.container} edges={['top']}>
@@ -258,16 +265,23 @@ class Home extends Component {
               color="accent"
             />
           }
+          editable={false}
+          onPress={() => {
+            console.log('search input pressed');
+            navigation.navigate('Products');
+          }}
         />
         <Space horizontal={normalize(10)} />
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <CategoryPanel
+            isLoading={isLoadingCategories}
             selected={selectedCategory}
-            categories={categories}
-            onCategorySelected={selectedCategory =>
-              this.setState({selectedCategory})
-            }
+            categories={['All', ...categories]}
+            onCategorySelected={selectedCategory => {
+              this.setState({selectedCategory});
+              fetchProducts({category: categories[selectedCategory - 1]});
+            }}
           />
           <View style={styles.slider} onLayout={this.onLayout}>
             <SliderBox
@@ -305,7 +319,13 @@ class Home extends Component {
                 keyExtractor={item => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item, i}) => <CardItem item={item} index={i} />}
+                renderItem={({item, i}) => (
+                  <CardItem
+                    item={item}
+                    index={i}
+                    onPress={() => console.log(item)}
+                  />
+                )}
                 refreshing={false}
                 loading={false}
                 onRefresh={() => {
@@ -348,10 +368,13 @@ Home.defaultProps = {};
 
 const mapStateToProps = store => ({
   categories: Selectors.getCategories(store),
+  products: Selectors.getProducts(store),
+  isLoadingCategories: Selectors.isLoadingCategories(store),
 });
 
 const mapDispatchToProps = {
   fetchCategories: Actions.fetchCategories,
+  fetchProducts: Actions.fetchProducts,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
