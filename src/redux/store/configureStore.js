@@ -14,7 +14,7 @@ const sagaMiddleware = createSagaMiddleware();
 const config = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: [],
+  whitelist: ['categories'],
 };
 
 const reducer = persistCombineReducers(config, reducers);

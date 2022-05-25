@@ -19,6 +19,6 @@ function* watchFetchCategories() {
   yield takeLatest(Actions.FETCH_CATEGORIES, fetchCategories);
 }
 
-export default function* streets() {
+export default function* categories() {
   yield all([fork(watchFetchCategories)]);
 }

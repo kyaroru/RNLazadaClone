@@ -24,3 +24,9 @@ export const formatCurrency = function (num, n = 2, x = 3, s = ',', c = '.') {
     '$&' + (s || ','),
   );
 };
+
+export const getRandomInt = (min = 1, max = 1000) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+};

@@ -6,24 +6,24 @@ export const getDefaultState = () => ({
   data: [],
 });
 
-function categories(state, action) {
+function products(state, action) {
   if (typeof state === 'undefined') {
     return getDefaultState();
   }
   switch (action.type) {
-    case Actions.FETCH_CATEGORIES:
+    case Actions.FETCH_PRODUCTS:
       return {
-        ...state,
         isLoading: true,
         error: null,
+        data: [],
       };
-    case Actions.FETCH_CATEGORIES_SUCCESS:
+    case Actions.FETCH_PRODUCTS_SUCCESS:
       return {
         isLoading: false,
         error: null,
         data: action.data,
       };
-    case Actions.FETCH_CATEGORIES_FAIL:
+    case Actions.FETCH_PRODUCTS_FAIL:
       return {
         isLoading: false,
         error: action.error,
@@ -34,4 +34,4 @@ function categories(state, action) {
   }
 }
 
-export default categories;
+export default products;

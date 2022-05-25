@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {View} from 'react-native';
 import {normalize, getScreenWidth} from 'utils/size';
+import {formatCurrency, getRandomInt} from 'utils/number';
 import Card from '../card';
 import Label from '../text/label';
 import FastImage from 'react-native-fast-image';
@@ -13,12 +14,22 @@ const imageWidth = (getScreenWidth() - normalize(32) - normalize(15)) / 2;
 
 const CardItem = props => {
   const {
-    item: {image, title, price, discount, freeShipping, rating, reviews, sold},
+    item: {
+      image,
+      title,
+      price,
+      discount,
+      freeShipping,
+      rating: {rate, count},
+      sold,
+    },
+    onPress,
     index,
   } = props;
   return (
     <Card
       roundedCorner={normalize(15)}
+      onPress={onPress}
       style={{
         backgroundColor: Colors.white,
         marginRight: index % 2 === 0 ? normalize(15) : 0,
@@ -36,14 +47,19 @@ const CardItem = props => {
         }}>
         <Label text={title} numberOfLines={2} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Label text={price} numberOfLines={2} color="accent" variant="bold" />
+          <Label
+            text={`RM ${formatCurrency(price)}`}
+            numberOfLines={2}
+            color="accent"
+            variant="bold"
+          />
           <View
             style={{
               backgroundColor: Colors.discountTag,
               marginLeft: normalize(5),
             }}>
             <Label
-              text={discount}
+              text={discount || `-${getRandomInt(10, 50)}%`}
               numberOfLines={2}
               color="accent"
               variant="bold"
@@ -51,29 +67,34 @@ const CardItem = props => {
             />
           </View>
         </View>
-        {freeShipping && (
-          <View>
-            <MaterialIcons
-              size={normalize(20)}
-              name="local-shipping"
-              color={Colors.icon16}
-            />
-          </View>
-        )}
+        {freeShipping ||
+          (getRandomInt(0, 2) === 1 && (
+            <View>
+              <MaterialIcons
+                size={normalize(20)}
+                name="local-shipping"
+                color={Colors.icon16}
+              />
+            </View>
+          ))}
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <MaterialIcons
             size={normalize(15)}
             name="star"
             color={Colors.icon6}
           />
-          <Label size="s" text={rating} />
+          <Label size="s" text={`${rate}`} />
           <Space horizontal={normalize(3)} />
-          <Label size="s" text={`(${reviews})`} color="secondaryText" />
+          <Label size="s" text={`(${count})`} color="secondaryText" />
           <Space horizontal={normalize(3)} />
           <Label size="xs" text={'•'} color="secondaryText" />
           <Space horizontal={normalize(3)} />
 
-          <Label size="s" text={sold} color="secondaryText" />
+          <Label
+            size="s"
+            text={sold || `${getRandomInt()} Sold`}
+            color="secondaryText"
+          />
         </View>
       </View>
     </Card>
