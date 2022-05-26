@@ -9,6 +9,7 @@ import {normalize} from 'utils/size';
 import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Actions from 'actions';
+import Selectors from 'selectors';
 import {alertWithTitle} from 'utils/alert';
 
 const dummyText = 'Due to time constraint, this is not implemented';
@@ -29,6 +30,8 @@ class Receipt extends Component {
   };
 
   renderUserDetails = () => {
+    const {profile} = this.props;
+    const user = profile?.results?.[0];
     return (
       <Card
         roundedCorner={0}
@@ -37,8 +40,17 @@ class Receipt extends Component {
           paddingHorizontal: normalize(16),
           paddingVertical: normalize(10),
         }}>
-        <Label text="Chiew Carol" variant="bold" />
-        <Label text="123, Taman Beruang, 50000, KL" />
+        <Label
+          text={`${user?.name?.title}. ${user?.name.first} ${user?.name?.last}`}
+          variant="bold"
+        />
+        <Label text={`${user?.cell}`} />
+        <Label
+          text={`${user?.location?.street?.number} ${user?.location?.street?.name} `}
+        />
+        <Label
+          text={`${user?.location?.city} ${user?.location?.state},  ${user?.location?.postcode}`}
+        />
       </Card>
     );
   };
@@ -193,7 +205,9 @@ const styles = StyleSheet.create({
 
 Receipt.defaultProps = {};
 
-const mapStateToProps = store => ({});
+const mapStateToProps = store => ({
+  profile: Selectors.getProfile(store),
+});
 
 const mapDispatchToProps = {
   removeCartItem: Actions.removeCartItem,
