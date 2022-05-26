@@ -5,7 +5,7 @@ import {
   TextInput,
   Button,
   Space,
-  CardItem,
+  ListItem,
   CategoryPanel,
   Label,
 } from 'components';
@@ -14,7 +14,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {alertWithTitle} from 'utils/alert';
 import Selectors from 'selectors';
 import Actions from 'actions';
-import {normalize} from 'utils/size';
+import {normalize, getScreenHeight} from 'utils/size';
 import MasonryList from '@react-native-seoul/masonry-list';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -50,17 +50,99 @@ class Products extends Component {
     this.setState({query: text});
   };
 
-  render() {
-    const {
-      categories,
-      fetchProducts,
-      products,
-      isLoadingCategories,
-      isLoadingProducts,
-      navigation,
-    } = this.props;
-    const {selectedCategory, sort, query, sortType} = this.state;
+  renderSearch = () => {
+    const {navigation} = this.props;
     const dummyText = 'Due to time constraint, this is not implemented';
+
+    return (
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            paddingLeft: normalize(16),
+          }}>
+          <MaterialIcons
+            name="chevron-left"
+            size={normalize(30)}
+            color={Colors.white}
+          />
+        </TouchableOpacity>
+        <View style={{flex: 1, paddingRight: normalize(16)}}>
+          <TextInput
+            containerStyle={{marginHorizontal: 0}}
+            iconLeft="search"
+            iconColor={Colors.gray}
+            placeholder="Search for anything"
+            onChangeText={this.onChangeText}
+            itemRight={
+              <Button
+                onPress={() => alertWithTitle('Search', dummyText)}
+                mini
+                text="Search"
+                color="accent"
+              />
+            }
+          />
+        </View>
+      </View>
+    );
+  };
+
+  renderSort = () => {
+    const {sortType} = this.state;
+
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <TouchableOpacity
+          onPress={this.sortPrice}
+          style={{flexDirection: 'row', marginLeft: normalize(16)}}>
+          <Label
+            text="Price"
+            color={sortType === 'price' ? 'accent' : 'white'}
+          />
+          <MaterialIcons
+            name={'swap-vert'}
+            size={normalize(25)}
+            color={sortType === 'price' ? Colors.accent : Colors.white}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={this.sortAlpha}
+          style={{flexDirection: 'row', marginLeft: normalize(16)}}>
+          <Label
+            text="Alphabet"
+            color={sortType === 'alpha' ? 'accent' : 'white'}
+          />
+          <MaterialIcons
+            name={'sort-by-alpha'}
+            size={normalize(25)}
+            color={sortType === 'alpha' ? Colors.accent : Colors.white}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  renderCategories = () => {
+    const {categories, fetchProducts, isLoadingCategories} = this.props;
+    const {selectedCategory} = this.state;
+    return (
+      <CategoryPanel
+        isLoading={isLoadingCategories}
+        selected={selectedCategory}
+        categories={['All', ...categories]}
+        onCategorySelected={selectedCategory => {
+          this.setState({selectedCategory});
+          fetchProducts({category: categories[selectedCategory - 1]});
+        }}
+      />
+    );
+  };
+
+  renderList = () => {
+    const {products, isLoadingProducts, navigation} = this.props;
+    const {sort, query, sortType} = this.state;
     const sortedProducts = sortType
       ? sortType === 'alpha'
         ? products.sort((a, b) => {
@@ -70,7 +152,7 @@ class Products extends Component {
               return (b.title > a.title) - (b.title < a.title);
             }
           })
-        : products.sort(function (a, b) {
+        : products.sort((a, b) => {
             if (sort === 'asc') {
               return a.price - b.price;
             } else {
@@ -82,113 +164,60 @@ class Products extends Component {
       x => x.title.toLowerCase().indexOf(query.toLowerCase()) > -1,
     );
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {isLoadingProducts && (
+          <View
             style={{
-              paddingLeft: normalize(16),
+              flex: 1,
+              paddingHorizontal: normalize(16),
+              height: getScreenHeight(),
             }}>
-            <MaterialIcons
-              name="chevron-left"
-              size={normalize(30)}
-              color={Colors.white}
-            />
-          </TouchableOpacity>
-          <View style={{flex: 1, paddingRight: normalize(16)}}>
-            <TextInput
-              containerStyle={{marginHorizontal: 0}}
-              iconLeft="search"
-              iconColor={Colors.gray}
-              placeholder="Search for anything"
-              onChangeText={this.onChangeText}
-              autoFocus
-              itemRight={
-                <Button
-                  onPress={() => alertWithTitle('Search', dummyText)}
-                  mini
-                  text="Search"
-                  color="accent"
-                />
-              }
-            />
+            <Label text="Loading..." color="white" />
           </View>
-        </View>
-        <Space horizontal={normalize(10)} />
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity
-            onPress={this.sortPrice}
-            style={{flexDirection: 'row', marginLeft: normalize(16)}}>
-            <Label
-              text="Price"
-              color={sortType === 'price' ? 'accent' : 'white'}
-            />
-            <MaterialIcons
-              name={'swap-vert'}
-              size={normalize(25)}
-              color={sortType === 'price' ? Colors.accent : Colors.white}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={this.sortAlpha}
-            style={{flexDirection: 'row', marginLeft: normalize(16)}}>
-            <Label
-              text="Alphabet"
-              color={sortType === 'alpha' ? 'accent' : 'white'}
-            />
-            <MaterialIcons
-              name={'sort-by-alpha'}
-              size={normalize(25)}
-              color={sortType === 'alpha' ? Colors.accent : Colors.white}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <Space horizontal={normalize(10)} />
-        <View>
-          <CategoryPanel
-            isLoading={isLoadingCategories}
-            selected={selectedCategory}
-            categories={['All', ...categories]}
-            onCategorySelected={selectedCategory => {
-              this.setState({selectedCategory});
-              fetchProducts({category: categories[selectedCategory - 1]});
+        )}
+        <View
+          style={{
+            width: '100%',
+            paddingHorizontal: normalize(16),
+            flexDirection: 'row',
+          }}>
+          <MasonryList
+            data={filteredProducts}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, i}) => (
+              <ListItem
+                item={item}
+                index={i}
+                onPress={() => navigation.push('Product', {item})}
+              />
+            )}
+            refreshing={false}
+            loading={isLoadingProducts}
+            onRefresh={() => {
+              console.log('onRefresh');
+            }}
+            onEndReachedThreshold={0.1}
+            onEndReached={() => {
+              console.log('load next');
             }}
           />
         </View>
+      </ScrollView>
+    );
+  };
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View
-            style={{
-              width: '100%',
-              paddingHorizontal: normalize(16),
-              flexDirection: 'row',
-            }}>
-            <MasonryList
-              data={filteredProducts}
-              keyExtractor={item => item.id}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, i}) => (
-                <CardItem
-                  item={item}
-                  index={i}
-                  onPress={() => console.log(item)}
-                />
-              )}
-              refreshing={false}
-              loading={isLoadingProducts}
-              onRefresh={() => {
-                console.log('onRefresh');
-              }}
-              onEndReachedThreshold={0.1}
-              onEndReached={() => {
-                console.log('load next');
-              }}
-            />
-          </View>
-        </ScrollView>
+  render() {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <Space horizontal={normalize(10)} />
+        {this.renderSearch()}
+        <Space horizontal={normalize(10)} />
+        {this.renderSort()}
+        <Space horizontal={normalize(10)} />
+        {this.renderCategories()}
+        {this.renderList()}
       </SafeAreaView>
     );
   }

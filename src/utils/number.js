@@ -30,3 +30,11 @@ export const getRandomInt = (min = 1, max = 1000) => {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 };
+
+export const getTotalPrice = data => {
+  const total = data.reduce((total, cart) => {
+    const newTotal = total + (cart?.item?.price || 0 * (cart?.quantity || 1));
+    return newTotal;
+  }, 0);
+  return Math.round(total * 100) / 100;
+};

@@ -8,46 +8,48 @@ import {normalize} from 'utils/size';
 const CategoryPanel = props => {
   const {categories, selected, onCategorySelected, isLoading} = props;
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{
-        paddingHorizontal: normalize(16),
-        paddingVertical: normalize(10),
-      }}>
-      {isLoading && categories.length === 0 ? (
-        <View>
-          <Label
-            text="Loading categories..."
-            size="ml"
-            variant="bold"
-            color="white"
-            align="center"
-          />
-        </View>
-      ) : (
-        categories.map((c, index) => (
-          <TouchableOpacity
-            onPress={() => onCategorySelected(index)}
-            key={c}
-            style={{
-              backgroundColor:
-                selected === index ? Colors.selectedTag : Colors.transparent,
-              borderRadius: normalize(15),
-              paddingHorizontal: normalize(8),
-              paddingBottom: normalize(3),
-            }}>
+    <View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: normalize(16),
+          paddingVertical: normalize(10),
+        }}>
+        {isLoading && categories.length === 0 ? (
+          <View>
             <Label
-              text={c}
+              text="Loading categories..."
               size="ml"
               variant="bold"
               color="white"
               align="center"
             />
-          </TouchableOpacity>
-        ))
-      )}
-    </ScrollView>
+          </View>
+        ) : (
+          categories.map((c, index) => (
+            <TouchableOpacity
+              onPress={() => onCategorySelected(index)}
+              key={c}
+              style={{
+                backgroundColor:
+                  selected === index ? Colors.selectedTag : Colors.transparent,
+                borderRadius: normalize(15),
+                paddingHorizontal: normalize(8),
+                paddingBottom: normalize(3),
+              }}>
+              <Label
+                text={c}
+                size="ml"
+                variant="bold"
+                color="white"
+                align="center"
+              />
+            </TouchableOpacity>
+          ))
+        )}
+      </ScrollView>
+    </View>
   );
 };
 

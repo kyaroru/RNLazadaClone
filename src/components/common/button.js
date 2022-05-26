@@ -99,6 +99,7 @@ const styles = {
   button: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: normalize(20),
     paddingHorizontal: normalize(20),
     paddingVertical: normalize(12),

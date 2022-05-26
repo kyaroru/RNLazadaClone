@@ -2,11 +2,21 @@ import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Cart, Dashboard, Splash, Products} from 'screens';
+import {
+  Home,
+  Cart,
+  Dashboard,
+  Splash,
+  Products,
+  Product,
+  Receipt,
+} from 'screens';
 import NavigationService from './navigation-service';
+import {Label} from 'components';
 import {connect} from 'react-redux';
 import Selectors from 'selectors';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import {normalize} from 'utils/size';
 
 const RootStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -16,23 +26,51 @@ class AppNavigator extends Component {
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
-        tabBarIcon: ({focused, color, size}) => {
+
+        tabBarIcon: ({color, size}) => {
           let iconName;
 
-          if (route.name === 'Home') {
+          if (route.name === 'HomeTab') {
             iconName = 'home';
-          } else if (route.name === 'Cart') {
+          } else if (route.name === 'CartTab') {
             iconName = 'shopping-cart';
-          } else if (route.name === 'Dashboard') {
+          } else if (route.name === 'DashboardTab') {
             iconName = 'account-circle';
           }
 
-          return <Icons name={iconName} size={size} color={color} />;
+          return (
+            <Icons
+              name={iconName}
+              size={size}
+              color={color}
+              style={{marginTop: normalize(3)}}
+            />
+          );
+        },
+        tabBarLabel: ({color}) => {
+          let label = '';
+          if (route.name === 'HomeTab') {
+            label = 'Landing';
+          } else if (route.name === 'CartTab') {
+            label = 'Cart';
+          } else if (route.name === 'DashboardTab') {
+            label = 'Dashboard';
+          }
+          return (
+            <Label
+              text={label}
+              size="s"
+              style={{
+                color,
+                marginBottom: Platform.OS === 'android' ? normalize(5) : 0,
+              }}
+            />
+          );
         },
       })}>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Cart" component={Cart} />
-      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="HomeTab" component={Home} />
+      <Tab.Screen name="CartTab" component={Cart} />
+      <Tab.Screen name="DashboardTab" component={Dashboard} />
     </Tab.Navigator>
   );
 
@@ -50,6 +88,9 @@ class AppNavigator extends Component {
             <>
               <RootStack.Screen name="Tabs" component={this.tabs} />
               <RootStack.Screen name="Products" component={Products} />
+              <RootStack.Screen name="Product" component={Product} />
+              <RootStack.Screen name="Cart" component={Cart} />
+              <RootStack.Screen name="Receipt" component={Receipt} />
             </>
           ) : (
             <>
