@@ -175,6 +175,7 @@ class Home extends Component {
   };
 
   componentDidMount() {
+    this.props.fetchProfile();
     this.props.fetchCategories();
     this.props.fetchProducts();
   }
@@ -360,6 +361,7 @@ const mapStateToProps = store => ({
 const mapDispatchToProps = {
   fetchCategories: Actions.fetchCategories,
   fetchProducts: Actions.fetchProducts,
+  fetchProfile: Actions.fetchProfile,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
