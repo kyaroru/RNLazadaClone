@@ -12,7 +12,7 @@ import Space from './space';
 
 const imageWidth = (getScreenWidth() - normalize(32) - normalize(15)) / 2;
 
-const CardItem = props => {
+const ListItem = props => {
   const {
     item: {
       image,
@@ -101,16 +101,16 @@ const CardItem = props => {
   );
 };
 
-CardItem.propTypes = {
+ListItem.propTypes = {
   style: PropTypes.any,
   roundedCorner: PropTypes.number,
   children: PropTypes.node,
 };
 
-CardItem.defaultProps = {
+ListItem.defaultProps = {
   style: null,
   roundedCorner: normalize(15),
   children: null,
 };
 
-export default CardItem;
+export default ListItem;

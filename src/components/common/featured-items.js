@@ -8,11 +8,11 @@ import Label from '../text/label';
 import Space from './space';
 import FastImage from 'react-native-fast-image';
 
-const FlashSales = props => {
-  const {title, items, type} = props;
+const FeaturedItems = props => {
+  const {title, items, type, onPress} = props;
   const imageWidth = (getScreenWidth() - normalize(32) - normalize(40)) / 3;
   return (
-    <Card style={styles.card} roundedCorner={normalize(15)}>
+    <Card style={styles.card} roundedCorner={normalize(15)} onPress={onPress}>
       <View style={{marginHorizontal: normalize(10)}}>
         <Label text={title} variant="bold" />
       </View>
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
   },
 });
 
-FlashSales.propTypes = {
+FeaturedItems.propTypes = {
   icons: PropTypes.array,
 };
 
-FlashSales.defaultProps = {
+FeaturedItems.defaultProps = {
   icons: [],
 };
 
-export default FlashSales;
+export default FeaturedItems;

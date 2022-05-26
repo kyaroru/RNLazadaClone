@@ -9,7 +9,8 @@ import {
   Button,
   FeaturedItems,
   Space,
-  CardItem,
+  ListItem,
+  Label,
 } from 'components';
 import {ScrollView, View, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -17,9 +18,11 @@ import {alertWithTitle} from 'utils/alert';
 import {SliderBox} from 'react-native-image-slider-box';
 import Selectors from 'selectors';
 import Actions from 'actions';
-import {getScreenWidth, normalize} from 'utils/size';
+import {getScreenWidth, normalize, getScreenHeight} from 'utils/size';
 import FastImage from 'react-native-fast-image';
 import MasonryList from '@react-native-seoul/masonry-list';
+
+const dummyText = 'Due to time constraint, this is not implemented';
 
 class Home extends Component {
   state = {
@@ -168,56 +171,6 @@ class Home extends Component {
         category: 'Smartphones',
       },
     ],
-    products: [
-      {
-        id: 1,
-        image: 'https://source.unsplash.com/1024x768/?plushie',
-        title: 'Ready Stock - Large Plushie',
-        freeShipping: true,
-        price: 'RM121.50',
-        discount: '-35%',
-        rating: '4.5',
-        reviews: 173,
-        sold: '299 Sold',
-        location: 'China',
-      },
-      {
-        id: 2,
-        image: 'https://source.unsplash.com/1024x768/?luggage',
-        title: 'New travel luggage',
-        freeShipping: true,
-        price: 'RM249.90',
-        discount: '-15%',
-        rating: '4.7',
-        reviews: 200,
-        sold: '1299 Sold',
-        location: 'China',
-      },
-      {
-        id: 3,
-        image: 'https://source.unsplash.com/1024x768/?smartwatch',
-        title: 'Smart Watch',
-        freeShipping: false,
-        price: 'RM1200.00',
-        discount: '-20%',
-        rating: '4.9',
-        reviews: 150,
-        sold: '50 Sold',
-        location: 'China',
-      },
-      {
-        id: 4,
-        image: 'https://source.unsplash.com/1024x768/?sofa',
-        title: 'Sofa 3 seater modern',
-        freeShipping: true,
-        price: 'RM1500.00',
-        discount: '-15%',
-        rating: '4.7',
-        reviews: 2713,
-        sold: '899 Sold',
-        location: 'China',
-      },
-    ],
     width: getScreenWidth() - normalize(32),
   };
 
@@ -232,57 +185,65 @@ class Home extends Component {
     });
   };
 
-  render() {
-    const {
-      categories,
-      fetchProducts,
-      products,
-      isLoadingCategories,
-      navigation,
-    } = this.props;
-    const {selectedCategory, icons} = this.state;
-    const dummyText = 'Due to time constraint, this is not implemented';
+  renderNavBar = () => {
     return (
-      <SafeAreaView style={styles.container} edges={['top']}>
-        <NavBar
-          title="Home"
-          titleColor="white"
-          iconLeft="qr-code-scanner"
-          iconColor={Colors.white}
-          iconRight="account-balance-wallet"
-          onLeftIconPress={() => alertWithTitle('Scan QR', dummyText)}
-          onRightIconPress={() => alertWithTitle('Wallet', dummyText)}
-        />
-        <TextInput
-          iconLeft="search"
-          iconColor={Colors.gray}
-          placeholder="Search for anything"
-          itemRight={
-            <Button
-              onPress={() => alertWithTitle('Search', dummyText)}
-              mini
-              text="Search"
-              color="accent"
-            />
-          }
-          editable={false}
-          onPress={() => {
-            console.log('search input pressed');
-            navigation.navigate('Products');
-          }}
-        />
-        <Space horizontal={normalize(10)} />
+      <NavBar
+        title="Home"
+        titleColor={Colors.white}
+        iconLeft="qr-code-scanner"
+        iconColor={Colors.white}
+        iconRight="account-balance-wallet"
+        onLeftIconPress={() => alertWithTitle('Scan QR', dummyText)}
+        onRightIconPress={() => alertWithTitle('Wallet', dummyText)}
+      />
+    );
+  };
 
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <CategoryPanel
-            isLoading={isLoadingCategories}
-            selected={selectedCategory}
-            categories={['All', ...categories]}
-            onCategorySelected={selectedCategory => {
-              this.setState({selectedCategory});
-              fetchProducts({category: categories[selectedCategory - 1]});
-            }}
+  renderSearch = () => {
+    const {navigation} = this.props;
+    return (
+      <TextInput
+        iconLeft="search"
+        iconColor={Colors.gray}
+        placeholder="Search for anything"
+        itemRight={
+          <Button
+            onPress={() => alertWithTitle('Search', dummyText)}
+            mini
+            text="Search"
+            color="accent"
           />
+        }
+        editable={false}
+        onPress={() => {
+          navigation.navigate('Products');
+        }}
+      />
+    );
+  };
+
+  renderCategories = () => {
+    const {categories, fetchProducts, isLoadingCategories} = this.props;
+    const {selectedCategory} = this.state;
+    return (
+      <CategoryPanel
+        isLoading={isLoadingCategories}
+        selected={selectedCategory}
+        categories={['All', ...categories]}
+        onCategorySelected={selectedCategory => {
+          this.setState({selectedCategory});
+          fetchProducts({category: categories[selectedCategory - 1]});
+        }}
+      />
+    );
+  };
+
+  renderContent = () => {
+    const {products, isLoadingProducts, navigation} = this.props;
+    const {selectedCategory, icons} = this.state;
+    return (
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {/* {selectedCategory === 0 && (
           <View style={styles.slider} onLayout={this.onLayout}>
             <SliderBox
               images={this.state.images}
@@ -292,53 +253,76 @@ class Home extends Component {
               ImageComponent={FastImage}
             />
           </View>
+        )} */}
+        {selectedCategory === 0 && (
           <IconModules
             icons={icons}
             onIconPress={selected => alertWithTitle(selected, dummyText)}
           />
-          <View style={styles.subContent}>
+        )}
+        <View style={styles.subContent}>
+          {selectedCategory === 0 && (
             <FeaturedItems
               title="Flash Sales"
               items={this.state.saleItems}
               type="sales"
+              onPress={() => alertWithTitle('Flash Sales', dummyText)}
             />
-            <Space vertical={normalize(20)} />
+          )}
+          {selectedCategory === 0 && <Space vertical={normalize(20)} />}
+          {selectedCategory === 0 && (
             <FeaturedItems
               title="Best Sellers"
               items={this.state.bestSellers}
               type="ranking"
+              onPress={() => alertWithTitle('Best Sellers', dummyText)}
             />
-            <Space vertical={normalize(20)} />
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-              }}>
-              <MasonryList
-                data={products}
-                keyExtractor={item => item.id}
-                numColumns={2}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item, i}) => (
-                  <CardItem
-                    item={item}
-                    index={i}
-                    onPress={() => console.log(item)}
-                  />
-                )}
-                refreshing={false}
-                loading={false}
-                onRefresh={() => {
-                  console.log('onRefresh');
-                }}
-                onEndReachedThreshold={0.1}
-                onEndReached={() => {
-                  console.log('load next');
-                }}
-              />
+          )}
+          {selectedCategory === 0 && <Space vertical={normalize(20)} />}
+          {isLoadingProducts && (
+            <View style={{flex: 1, height: getScreenHeight()}}>
+              <Label text="Loading..." />
             </View>
+          )}
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+            }}>
+            <MasonryList
+              data={products}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+              renderItem={({item, i}) => (
+                <ListItem
+                  item={item}
+                  index={i}
+                  onPress={() => navigation.navigate('Product', {item})}
+                />
+              )}
+              refreshing={false}
+              loading={false}
+              onRefresh={() => {
+                console.log('onRefresh');
+              }}
+              onEndReachedThreshold={0.1}
+              onEndReached={() => {
+                console.log('load next');
+              }}
+            />
           </View>
-        </ScrollView>
+        </View>
+      </ScrollView>
+    );
+  };
+  render() {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        {this.renderNavBar()}
+        {this.renderSearch()}
+        {this.renderCategories()}
+        {this.renderContent()}
       </SafeAreaView>
     );
   }
@@ -370,6 +354,7 @@ const mapStateToProps = store => ({
   categories: Selectors.getCategories(store),
   products: Selectors.getProducts(store),
   isLoadingCategories: Selectors.isLoadingCategories(store),
+  isLoadingProducts: Selectors.isLoadingProducts(store),
 });
 
 const mapDispatchToProps = {

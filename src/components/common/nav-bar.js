@@ -3,11 +3,19 @@ import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import Label from '../text/label';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {normalize, getScreenWidth} from 'utils/size';
+import {Colors} from 'themes';
 
 const NavBar = props => {
   const Icon = props.iconComponent || MaterialIcons;
   return (
-    <View style={styles.navBar}>
+    <View
+      style={[
+        styles.navBar,
+        props.withBorder && {
+          borderBottomWidth: 1,
+          borderBottomColor: Colors.divider,
+        },
+      ]}>
       {props.iconLeft && (
         <TouchableOpacity
           style={styles.iconLeft}
