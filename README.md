@@ -1,58 +1,130 @@
-# react-live-coding-test
-## Follow these steps
-Application Setup (DO THIS FIRST)
-- Fork this repository into your GitHub account (You can create a GitHub account if you don't have one)
-- Clone the repository from your repository
-- Checkout main branch
-- Install dependencies
-- To start development use npm start
+## React Native Lazada Clone App
 
-## Project Overview
-This project is about a frontend ecommerce application. the expected time to finish the project is around 12 hours (4 days, 3 hours each).
+## Notes from Carol
+I did this as part of a coding test from a company.
+Initially I have informed them of my expected salary, & they had reviewed my CV and said approved to proceed to next stage. So they gave me this assessment :p 
 
-### Required knowledge
-1. Tailwind
-2. Typescript
-3. NextJS
-4. Docker (BONUS)
-5. Any Free deployment platform Experience (Bonus)
+It was very weird as I am applying for React Native developer position, but the test they provided is for React.js.
+After consulting them, they say until the RN template is ready, candidate have to use the React.js template. 🎃
 
-we are open to any /components if it is needed in the test.
+I also asked do I still need to clone the React.js one or I already can create a brand new RN app and commit to a new repository.
+They replied no, I still need to clone the React.js template, then wipe out the codebase, and start committing my RN code. 🤯
 
-### **IMPORTANT**
-After implementing each feature for each test in the respective branch, create a Pull Request and merge to the main branch, then delete the merged branch.
+Well, I already created an RN version in another new [repo](https://github.com/kyaroru/ReactNativeACNTest) since they only reply my question the next day after I ask the question. After that, I proceed with what they requested, forked their React.js repository into this repository, then migrate my old one from [here](https://github.com/kyaroru/ReactNativeACNTest)
 
-### First Test - Landing page
-1. create a new branch name - `feature/landing-page`
-2. create a clone of this page https://www.lazada.com.my/
-3. use this when product details is needed : https://fakestoreapi.com/
-4. this page should be in http://localhost:3000/
+It took me 3 days (midnight - after working hours & after dinner) to finish the requirement (4 tests in total).
+When I finished and submitted to them, there is no reply from them until I follow up with them 4 days later.
 
-PS: clone as similiar as you can. As long as you are able to showcase your skill.
+It is only now they told me my assessment has passed but because my salary is little bit out of their budget, so they will not proceed interview with me 😢
 
-### Second Test  -  Product listing
-1. create a new branch name - `feature/product-listing`
-2. use https://fakestoreapi.com/ as API for listing.
-3. create filterable, sortable and paginated table.
-4. the products can be filtered by categories - list of categories can be found at https://fakestoreapi.com/products/categories
-5. has floating button that when clicked, shows the current items in cart. (data is retained even if the page is refreshed).
-6. there will also be a quick buy button that redirects the user to receipts page.
-7. this page should be in http://localhost:3000/products
+They could've told me earlier before I start doing this assessment.
 
-### Third Test -  Receipts page
-1. create a new branch name - `feature/receipts` based on  `feature/product-listing` after you are done with second test.
-2. user will be redirected to this page once user click quick buy at http://localhost:3000/products
-3. user should be presented with a the items in the cart.
-4. user should be able to view a pie chart of the price of the items.
-5. user should be able to download a pdf of the receipts.
-6. this page should be in http://localhost:3000/receipts
+### Timeline of events
+| Date | Time | Description |
+| ---- | ---- | ----------- |
+| 24th May 2022 | 5pm | Email of the assessment to me, and request the assessment to be completed by 26th May 2022 12pm (less than 48 hours to complete lazada clone app) |
+| 24th May 2022 | 5:10pm | I asked the question above regarding react.js template |
+| 24th May 2022 | Night | I created new repository and start working on it |
+| 25th May 2022 | 10am | Reply from them - insist to forked the React.js one, then commit RN code into it |
+| 25th May 2022 | 4pm | Well, migrate my new repo into the forked version of React.js repo |
+| 25th May 2022 | Night | Continue working on it |
+| 26th May 2022 | 4am in the MORNING | Told them cannot make it at 12pm for submission, as I tried my best only can finish 1st and 2nd test out of 4 tests |
+| 26th May 2022 | 10am | Reply from them - allow me to extend the time until next day for submission |
+| 26th May 2022 | Night | Continue working on it |
+| 27th May 2022 | 3am in the MORNING | Finally finish everything & send email to respective person in charge |
+| 27th May 2022 until 31st May 2022 | - | NO NEWS AT ALL |
+| 31st May 2022 | 11am | Follow up with the person |
+| 31st May 2022 | 3pm | Reply from them - Actually you already passed the test, but salary is a little bit over budget, so maybe no proceed to interview |
 
-### Fourth test - Dashboard
-1. create a new branch name - `feature/dashboard`
-2. use https://randomuser.me/api/ as API for showing user profile.
-3. try to utilize every field in the `result` from the response.
-4. this page should be in http://localhost:3000/dashboard
+Programmer life is tough 🥲
 
-### Bonus
-1. Dockerize this application.
-2. Deploy this application online and share the link for viewing.
+But it's okay, now this can be part of my portfolio 😛
+
+Btw, to prevent hurting anyone, I have detach my repository from the Parent repository 😛
+
+Anyways, let's get to the intro!
+
+----
+## Introduction
+
+This is a simple clone app of Lazada Mobile App built using
+
+- [React Native v0.68.2](https://reactnative.dev/)
+
+Together with some 3rd party libraries:
+
+- [React Navigation v6](https://reactnavigation.org/docs/getting-started/) - for navigation
+- [Masonry List](https://github.com/hyochan/react-native-masonry-list) - to render product listing
+- [Axios](https://github.com/axios/axios) - for API calling
+- [redux](https://redux.js.org/) - for state management
+- [redux-saga](https://redux-saga.js.org/) - for side effect management
+- [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons) - free icon sets
+
+- Full detail from `package.json`:
+
+```
+    "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-seoul/masonry-list": "^1.3.0",
+    "@react-navigation/bottom-tabs": "^6.3.1",
+    "@react-navigation/native": "^6.0.10",
+    "@react-navigation/stack": "^6.2.1",
+    "axios": "^0.27.2",
+    "moment": "^2.29.3",
+    "qs": "^6.10.3",
+    "react": "17.0.2",
+    "react-native": "0.68.2",
+    "react-native-fast-image": "^8.5.11",
+    "react-native-gesture-handler": "^2.4.2",
+    "react-native-get-random-values": "^1.8.0",
+    "react-native-image-slider-box": "^1.1.23",
+    "react-native-safe-area-context": "^4.2.5",
+    "react-native-screens": "^3.13.1",
+    "react-native-vector-icons": "^9.1.0",
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6",
+    "redux-persist": "^6.0.0",
+    "redux-saga": "^1.1.3",
+    "uuid": "^8.3.2"
+```
+
+## App Folder Structure
+
+- `api` - for API related files
+- `components` - the common components
+- `navigator` - routes configuration
+- `redux` - all redux related files
+- `screens` - the screens itself
+- `themes` - predefined colors
+- `utils` - basic utils for alert, number & sizes
+
+## Clone
+
+```sh
+git clone https://github.com/kyaroru/RNLazadaClone.git
+```
+
+## Install
+
+```sh
+cd RNLazadaClone && yarn install
+cd ios && pod install (for iOS)
+```
+
+## Run
+
+```sh
+yarn ios or open ios/ReactNativeACNTest.xcworkspace
+yarn android or use Android Studio to run
+```
+
+## Screenshots
+
+- Screenshots can be found [here](https://drive.google.com/drive/folders/13WX9C4wRqWQ89BJdWoMKUwiGaM11XUJA?usp=sharing)
+
+## Video Demo
+
+- For full Demo video, refer to [here](https://recordit.co/5i7OJvH0hA)
+
+![Demo](http://g.recordit.co/5i7OJvH0hA.gif)
